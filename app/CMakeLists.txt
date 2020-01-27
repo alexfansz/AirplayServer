@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+project("appleTV")
+
 add_subdirectory(src/main/cpp/lib/crypto)
 add_subdirectory(src/main/cpp/lib/curve25519)
 add_subdirectory(src/main/cpp/lib/ed25519)

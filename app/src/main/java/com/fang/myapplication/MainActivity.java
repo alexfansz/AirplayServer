@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.webrtc.RendererCommon;
+import org.webrtc.SurfaceViewRenderer;
+import owt.base.LocalStream;
+
 public class MainActivity extends Activity implements View.OnClickListener {
 
     public static String TAG = "MainActivity";
@@ -23,6 +27,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private TextView mTxtDevice;
     private boolean mIsStart = false;
 
+    private SurfaceViewRenderer smallRenderer;
+    private LocalStream localStream;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +42,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mAirPlayServer = new AirPlayServer();
         mRaopServer = new RaopServer(mSurfaceView);
         mDNSNotify = new DNSNotify();
+
+        smallRenderer = findViewById(R.id.small_renderer);
+        smallRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
+        smallRenderer.setEnableHardwareScaler(true);
+        smallRenderer.setZOrderMediaOverlay(true);
     }
 
     @Override

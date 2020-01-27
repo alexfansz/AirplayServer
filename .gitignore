@@ -5,6 +5,13 @@
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
+.idea/caches/
+.idea/encodings.xml
+.idea/gradle.xml
+.idea/misc.xml
+.idea/runConfigurations.xml
+.idea/vcs.xml
+app/.cxx/
 .DS_Store
 /build
 /captures
