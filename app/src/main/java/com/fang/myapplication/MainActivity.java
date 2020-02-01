@@ -10,8 +10,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.webrtc.EglBase;
 import org.webrtc.RendererCommon;
 import org.webrtc.SurfaceViewRenderer;
+
+import owt.base.ContextInitialization;
 import owt.base.LocalStream;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -29,6 +32,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private SurfaceViewRenderer smallRenderer;
     private LocalStream localStream;
+    EglBase rootEglBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         smallRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
         smallRenderer.setEnableHardwareScaler(true);
         smallRenderer.setZOrderMediaOverlay(true);
+
+        initOwtClient();
     }
 
     @Override
@@ -92,6 +98,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mRaopServer.stopServer();
     }
 
+
+    private void initOwtClient() {
+        rootEglBase = EglBase.create();
+
+        ContextInitialization.create()
+                .setApplicationContext(this)
+                .setVideoHardwareAccelerationOptions(
+                        rootEglBase.getEglBaseContext(),
+                        rootEglBase.getEglBaseContext())
+                .initialize();
+    }
 }
 
 

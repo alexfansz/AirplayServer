@@ -17,8 +17,8 @@ public class VideoPlayer extends Thread {
     private static final String TAG = "VideoPlayer";
 
     private String mMimeType = "video/avc";
-    private int mVideoWidth  = 540;
-    private int mVideoHeight = 960;
+    private int mVideoWidth  = 720;
+    private int mVideoHeight = 1280;
     private MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
     private MediaCodec mDecoder = null;
     private Surface mSurface = null;
@@ -27,6 +27,8 @@ public class VideoPlayer extends Thread {
 
     public VideoPlayer(Surface surface) {
         mSurface = surface;
+
+        //initDecoder();
     }
 
     public void initDecoder() {
@@ -44,6 +46,9 @@ public class VideoPlayer extends Thread {
     public void addPacker(NALPacket nalPacket) {
         mListBuffer.add(nalPacket);
     }
+    /*public void addPacker(NALPacket nalPacket) {
+        doDecode(nalPacket);
+    }*/
     
     @Override
     public void run() {
@@ -52,7 +57,7 @@ public class VideoPlayer extends Thread {
         while (!mIsEnd) {
             if (mListBuffer.size() == 0) {
                 try {
-                    sleep(50);
+                    sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -73,6 +78,7 @@ public class VideoPlayer extends Thread {
         }
         if (inputBufIndex >= 0) {
             ByteBuffer inputBuf = decoderInputBuffers[inputBufIndex];
+            inputBuf.clear();
             inputBuf.put(nalPacket.nalData);
             mDecoder.queueInputBuffer(inputBufIndex, 0, nalPacket.nalData.length, nalPacket.pts, 0);
         } else {
@@ -85,19 +91,21 @@ public class VideoPlayer extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         if (outputBufferIndex >= 0) {
             mDecoder.releaseOutputBuffer(outputBufferIndex, true);
-            try{
+            /*try{
                 Thread.sleep(50);
             }  catch (InterruptedException ie){
                 ie.printStackTrace();
-            }
+            }*/
         } else if (outputBufferIndex == MediaCodec.INFO_TRY_AGAIN_LATER) {
-            try{
+            /*try{
                 Thread.sleep(10);
             }  catch (InterruptedException ie){
                 ie.printStackTrace();
-            }
+            }*/
         } else if (outputBufferIndex == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
             // not important for us, since we're using Surface
 
@@ -107,5 +115,9 @@ public class VideoPlayer extends Thread {
 
         }
 
+        /*while (outputBufferIndex>=0) {
+            mDecoder.releaseOutputBuffer(outputBufferIndex, true);
+            outputBufferIndex = mDecoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
+        }*/
     }
 }

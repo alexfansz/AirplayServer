@@ -9,7 +9,9 @@ import com.fang.myapplication.model.PCMPacket;
 import com.fang.myapplication.player.AudioPlayer;
 import com.fang.myapplication.player.VideoPlayer;
 
-public class RaopServer implements SurfaceHolder.Callback {
+import org.webrtc.VideoFrame;
+
+public class RaopServer extends OwtAirplayCapture implements SurfaceHolder.Callback {
 
     static {
         System.loadLibrary("raop_server");
@@ -35,6 +37,8 @@ public class RaopServer implements SurfaceHolder.Callback {
         nalPacket.nalType = nalType;
         nalPacket.pts = pts;
         mVideoPlayer.addPacker(nalPacket);
+
+        //this.capturerObserver.onFrameCaptured(new VideoFrame(buffer, 0, captureTimeNs););
     }
 
     public void onRecvAudioData(short[] pcm, long pts) {
